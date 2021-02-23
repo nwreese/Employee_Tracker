@@ -280,13 +280,13 @@ const managageDepartments = () => {
                         })
                     break;
 
-                case 'Remove role':
+                case 'Remove employee':
                      connection.query(
                         'DELETE FROM employees WHERE id=?',
-                        [answer.removeRoleID],
+                        [answer.removeemployeeID],
                         (err, res) => {
                             if (err) throw err;
-                            console.log('Role removed');
+                            console.log('Employee removed');
                             promptUser();
                         }
                     )
