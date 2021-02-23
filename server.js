@@ -121,21 +121,78 @@ const managageDepartments = () => {
 
 
  const viewRoles = () => {
-     connection.query('SELECT * FROM roles', (err, res) =>{
+     connection.query('SELECT * FROM role', (err, res) =>{
          if (err) throw(err);
          console.log(res);
+         promptUser();
      });
     };
 
     const manageRoles = () => {
-
-    }
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'What would you like to do?',
+                choices: [
+                    'Add role',
+                    'Remove role'
+                ],
+                name: 'roleQuestion',
+    
+            },
+            {
+                type: 'input',
+                message: 'What is the name of the new role?',
+                name: 'newRoleName',
+                when: (answer) => {
+                  return answer.roleQuestion === 'Add role';
+    
+                }
+                
+            },
+            {
+                type: 'input',
+                message: 'What is the role ID you would like to remove?',
+                name: 'removeRoleID',
+                when: (answer) => {
+                  return answer.roleQuestion === 'Remove role';
+                }
+            }
+        ])
+        .then((answer) => {
+       switch(answer.roleQuestion) {
+                case 'Add role':
+                    connection.query(
+                        'INSERT INTO role SET title=?',
+                        [answer.newRoleName],
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log('Role added');
+                            promptUser();
+                        })
+                    break;
+                case 'Remove role':
+                     connection.query(
+                        'DELETE FROM role WHERE id=?',
+                        [answer.removeRoleID],
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log('Role removed');
+                            promptUser();
+                        }
+                    )
+                    break;
+            }
+        })
+    };
+    
    
    
     const viewEmployees = () => {
         connection.query('SELECT * FROM employees', (err, res) =>{
             if (err) throw (err);
             console.log(res);
+            promptUser();
         })
     }
 
