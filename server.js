@@ -230,6 +230,16 @@ const managageDepartments = () => {
             },
             {
                 type: 'input',
+                message: 'What is the salary of the new employee?',
+                name: 'newSalary',
+                when: (answer) => {
+                  return answer.employeeQuestion === 'Add employee';
+    
+                }
+                
+            },
+            {
+                type: 'input',
                 message: 'What is the employee ID you would like to remove?',
                 name: 'removeEmployeeID',
                 when: (answer) => {
@@ -256,6 +266,16 @@ const managageDepartments = () => {
                         (err, res) => {
                             if (err) throw err;
                             console.log('Employee last name added');
+                            promptUser();
+                        })
+                    break;
+                    case 'Add employee':
+                    connection.query(
+                        'INSERT INTO employees SET salary=?',
+                        [answer.newSalary],
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log('Employee salary added');
                             promptUser();
                         })
                     break;
