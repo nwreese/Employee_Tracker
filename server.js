@@ -123,7 +123,7 @@ const managageDepartments = () => {
  const viewRoles = () => {
      connection.query('SELECT * FROM role', (err, res) =>{
          if (err) throw(err);
-         console.log(res);
+         console.table(res);
          promptUser();
      });
     };
@@ -191,13 +191,88 @@ const managageDepartments = () => {
     const viewEmployees = () => {
         connection.query('SELECT * FROM employees', (err, res) =>{
             if (err) throw (err);
-            console.log(res);
+            console.table(res);
             promptUser();
         })
     }
 
     const manageEmployees = () => {
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'What would you like to do?',
+                choices: [
+                    'Add employee',
+                    'Remove employee'
+                ],
+                name: 'employeeQuestion',
+    
+            },
+            {
+                type: 'input',
+                message: 'What is the first name of the new employee?',
+                name: 'newFisrtName',
+                when: (answer) => {
+                  return answer.employeeQuestion === 'Add employee';
+    
+                }
+                
+            },
+            {
+                type: 'input',
+                message: 'What is the last name of the new employee?',
+                name: 'newLastName',
+                when: (answer) => {
+                  return answer.employeeQuestion === 'Add employee';
+    
+                }
+                
+            },
+            {
+                type: 'input',
+                message: 'What is the employee ID you would like to remove?',
+                name: 'removeEmployeeID',
+                when: (answer) => {
+                  return answer.employeeQuestion === 'Remove employee';
+                }
+            }
+        ])
+        .then((answer) => {
+       switch(answer.employeeQuestion) {
+                case 'Add employee':
+                    connection.query(
+                        'INSERT INTO employees SET first_name=?',
+                        [answer.newFirstName],
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log('Employee first name added');
+                            promptUser();
+                        })
+                    break;
+                    case 'Add employee':
+                    connection.query(
+                        'INSERT INTO employees SET last_name=?',
+                        [answer.newLastName],
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log('Employee last name added');
+                            promptUser();
+                        })
+                    break;
 
+                case 'Remove role':
+                     connection.query(
+                        'DELETE FROM employees WHERE id=?',
+                        [answer.removeRoleID],
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log('Role removed');
+                            promptUser();
+                        }
+                    )
+                    break;
+            }
+        })
     }
 promptUser();
 const endConnection = () => {
