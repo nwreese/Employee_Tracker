@@ -152,6 +152,16 @@ const managageDepartments = () => {
             },
             {
                 type: 'input',
+                message: 'What is the salary of the new role?',
+                name: 'newSalary',
+                when: (answer) => {
+                  return answer.roleQuestion === 'Add role';
+    
+                }
+                
+            },
+            {
+                type: 'input',
                 message: 'What is the role ID you would like to remove?',
                 name: 'removeRoleID',
                 when: (answer) => {
@@ -163,8 +173,8 @@ const managageDepartments = () => {
        switch(answer.roleQuestion) {
                 case 'Add role':
                     connection.query(
-                        'INSERT INTO role SET title=?',
-                        [answer.newRoleName],
+                        'INSERT INTO role (title, salary) VALUES (?)',
+                        [answer.newRoleName, answer.newSalary],
                         (err, res) => {
                             if (err) throw err;
                             console.log('Role added');
@@ -211,7 +221,7 @@ const managageDepartments = () => {
             {
                 type: 'input',
                 message: 'What is the first name of the new employee?',
-                name: 'newFisrtName',
+                name: 'newFirstName',
                 when: (answer) => {
                   return answer.employeeQuestion === 'Add employee';
     
@@ -222,16 +232,6 @@ const managageDepartments = () => {
                 type: 'input',
                 message: 'What is the last name of the new employee?',
                 name: 'newLastName',
-                when: (answer) => {
-                  return answer.employeeQuestion === 'Add employee';
-    
-                }
-                
-            },
-            {
-                type: 'input',
-                message: 'What is the salary of the new employee?',
-                name: 'newSalary',
                 when: (answer) => {
                   return answer.employeeQuestion === 'Add employee';
     
@@ -251,31 +251,11 @@ const managageDepartments = () => {
        switch(answer.employeeQuestion) {
                 case 'Add employee':
                     connection.query(
-                        'INSERT INTO employees SET first_name=?',
-                        [answer.newFirstName],
+                        'INSERT INTO employees (first_name, last_name) VALUES (?)',
+                        [[answer.newFirstName, answer.newLastName]],
                         (err, res) => {
                             if (err) throw err;
-                            console.log('Employee first name added');
-                            promptUser();
-                        })
-                    break;
-                    case 'Add employee':
-                    connection.query(
-                        'INSERT INTO employees SET last_name=?',
-                        [answer.newLastName],
-                        (err, res) => {
-                            if (err) throw err;
-                            console.log('Employee last name added');
-                            promptUser();
-                        })
-                    break;
-                    case 'Add employee':
-                    connection.query(
-                        'INSERT INTO employees SET salary=?',
-                        [answer.newSalary],
-                        (err, res) => {
-                            if (err) throw err;
-                            console.log('Employee salary added');
+                            console.log('Employee added');
                             promptUser();
                         })
                     break;
@@ -283,9 +263,10 @@ const managageDepartments = () => {
                 case 'Remove employee':
                      connection.query(
                         'DELETE FROM employees WHERE id=?',
-                        [answer.removeemployeeID],
+                        [answer.removeEmployeeID],
                         (err, res) => {
                             if (err) throw err;
+
                             console.log('Employee removed');
                             promptUser();
                         }
