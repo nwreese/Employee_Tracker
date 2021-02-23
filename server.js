@@ -174,7 +174,7 @@ const managageDepartments = () => {
                 case 'Add role':
                     connection.query(
                         'INSERT INTO role (title, salary) VALUES (?)',
-                        [answer.newRoleName, answer.newSalary],
+                        [[answer.newRoleName, answer.newSalary]],
                         (err, res) => {
                             if (err) throw err;
                             console.log('Role added');
